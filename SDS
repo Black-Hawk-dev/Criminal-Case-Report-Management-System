@@ -1,0 +1,238 @@
+CriminalCaseManagementSystem/
+│
+├── Controllers/
+│   ├── ComplaintsController.cs
+│   ├── CasesController.cs
+│   ├── SuspectsController.cs
+│   └── ...
+│
+├── Models/
+│   ├── Complaint.cs
+│   ├── Case.cs
+│   ├── Suspect.cs
+│   └── ...
+│
+├── ViewModels/
+│   ├── CaseDetailsViewModel.cs
+│   ├── SearchFilterViewModel.cs
+│   └── ...
+│
+├── Views/
+│   ├── Complaints/
+│   ├── Cases/
+│   ├── Shared/
+│   └── ...
+│
+├── wwwroot/
+│   ├── css/
+│   ├── js/
+│   ├── uploads/ (مرفقات)
+│   └── ...
+│
+├── Data/
+│   ├── ApplicationDbContext.cs
+│
+├── Services/ (إن لزم فصل منطق الأعمال)
+│
+├── ERD/ (ملف .png أو .drawio)
+│
+├── Reports/ (PDF Templates)
+│
+└── Startup.cs / Program.cs
+User
+ └── Id (PK)
+ └── FullName
+ └── Role
+
+Investigator
+ └── InvestigatorId (PK)
+ └── FullName
+ └── Rank
+ └── Department
+ └── UserId (FK → User.Id)
+
+Complaint
+ └── ComplaintId (PK)
+ └── ReporterName
+ └── NationalId
+ └── ComplaintType
+ └── ComplaintDate
+
+Case
+ └── CaseId (PK)
+ └── CaseNumber
+ └── ComplaintId (FK → Complaint)
+ └── InvestigatorId (FK → Investigator)
+ └── Status
+ └── CreatedDate
+
+Suspect
+ └── SuspectId (PK)
+ └── FullName
+ └── NationalId
+ └── DateOfBirth
+
+CaseSuspect
+ └── CaseId (FK → Case)
+ └── SuspectId (FK → Suspect)
+
+CaseDocument
+ └── DocumentId (PK)
+ └── CaseId (FK → Case)
+ └── FileName
+ └── FilePath
+
+CaseStatusHistory
+ └── StatusHistoryId (PK)
+ └── CaseId (FK → Case)
+ └── Status
+ └── ChangedByUserId (FK → User)
+ └── ChangeDate
+
+public class ApplicationUser : IdentityUser
+{
+    public string FullName { get; set; }
+    public string Role { get; set; }
+
+    public Investigator Investigator { get; set; }
+}
+public class Investigator
+{
+    public int InvestigatorId { get; set; }
+    public string FullName { get; set; }
+    public string Rank { get; set; }
+    public string Department { get; set; }
+
+    public string UserId { get; set; }
+    public ApplicationUser User { get; set; }
+
+    public ICollection<Case> AssignedCases { get; set; }
+}
+public class Complaint
+{
+    public int ComplaintId { get; set; }
+    public string ReporterName { get; set; }
+    public string NationalId { get; set; }
+    public string ComplaintType { get; set; }
+    public string Description { get; set; }
+    public DateTime ComplaintDate { get; set; }
+    public string? AttachmentPath { get; set; }
+
+    public ICollection<Case> RelatedCases { get; set; }
+}
+public class Case
+{
+    public int CaseId { get; set; }
+    public string CaseNumber { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public string Status { get; set; }
+
+    public int ComplaintId { get; set; }
+    public Complaint Complaint { get; set; }
+
+    public int InvestigatorId { get; set; }
+    public Investigator Investigator { get; set; }
+
+    public ICollection<CaseSuspect> CaseSuspects { get; set; }
+    public ICollection<CaseDocument> Documents { get; set; }
+    public ICollection<CaseStatusHistory> StatusHistory { get; set; }
+}
+public class Suspect
+{
+    public int SuspectId { get; set; }
+    public string FullName { get; set; }
+    public string NationalId { get; set; }
+    public DateTime DateOfBirth { get; set; }
+    public string? Notes { get; set; }
+
+    public ICollection<CaseSuspect> CaseSuspects { get; set; }
+}
+public class CaseSuspect
+{
+    public int CaseId { get; set; }
+    public Case Case { get; set; }
+
+    public int SuspectId { get; set; }
+    public Suspect Suspect { get; set; }
+}
+public class CaseDocument
+{
+    public int DocumentId { get; set; }
+    public string FileName { get; set; }
+    public string FilePath { get; set; }
+    public DateTime UploadDate { get; set; }
+
+    public int CaseId { get; set; }
+    public Case Case { get; set; }
+}
+public class CaseStatusHistory
+{
+    public int StatusHistoryId { get; set; }
+    public string Status { get; set; }
+    public DateTime ChangeDate { get; set; }
+
+    public int CaseId { get; set; }
+    public Case Case { get; set; }
+
+    public string ChangedByUserId { get; set; }
+    public ApplicationUser ChangedByUser { get; set; }
+}
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+{
+    public DbSet<Complaint> Complaints { get; set; }
+    public DbSet<Case> Cases { get; set; }
+    public DbSet<Investigator> Investigators { get; set; }
+    public DbSet<Suspect> Suspects { get; set; }
+    public DbSet<CaseSuspect> CaseSuspects { get; set; }
+    public DbSet<CaseDocument> CaseDocuments { get; set; }
+    public DbSet<CaseStatusHistory> CaseStatusHistories { get; set; }
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<CaseSuspect>()
+            .HasKey(cs => new { cs.CaseId, cs.SuspectId });
+
+        modelBuilder.Entity<CaseSuspect>()
+            .HasOne(cs => cs.Case)
+            .WithMany(c => c.CaseSuspects)
+            .HasForeignKey(cs => cs.CaseId);
+
+        modelBuilder.Entity<CaseSuspect>()
+            .HasOne(cs => cs.Suspect)
+            .WithMany(s => s.CaseSuspects)
+            .HasForeignKey(cs => cs.SuspectId);
+    }
+}
+
+[Authorize(Roles = "Admin")]
+public IActionResult CreateInvestigator() { ... }
++----------------------------+
+|         Case              |
++----------------------------+
+| CaseId (PK)               |
+| CaseNumber                |
+| CreatedDate               |
+| Status                    |
+| ComplaintId (FK)          |
+| InvestigatorId (FK)       |
++----------------------------+
+
++----------------------------+
+|         Suspect           |
++----------------------------+
+| SuspectId (PK)            |
+| FullName                  |
+| NationalId                |
+| DateOfBirth               |
++----------------------------+
+
++----------------------------+
+|       CaseSuspect         |
++----------------------------+
+| CaseId (PK, FK)           |
+| SuspectId (PK, FK)        |
++----------------------------+
