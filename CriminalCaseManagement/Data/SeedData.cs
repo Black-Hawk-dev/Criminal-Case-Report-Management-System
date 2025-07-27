@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Identity;
-using CriminalCaseManagement.Models.Entities;
-
 namespace CriminalCaseManagement.Data
 {
     public static class SeedData
