@@ -1,8 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using CriminalCaseManagement.Data;
-using CriminalCaseManagement.Models;
-
 namespace CriminalCaseManagement.Controllers
 {
     public class CasesController : Controller
