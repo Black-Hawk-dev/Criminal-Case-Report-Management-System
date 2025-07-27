@@ -1,0 +1,211 @@
+@model CriminalCaseManagement.Models.Entities.Case
+@{
+    ViewData["Title"] = "حذف القضية";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="card-title">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        تأكيد حذف القضية
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <h5><i class="fas fa-exclamation-triangle me-2"></i>تحذير!</h5>
+                        <p class="mb-0">أنت على وشك حذف القضية التالية. هذا الإجراء لا يمكن التراجع عنه.</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <!-- Case Information -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        معلومات القضية
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <dl class="row">
+                                        <dt class="col-sm-3">رقم القضية:</dt>
+                                        <dd class="col-sm-9"><strong>@Model.CaseNumber</strong></dd>
+                                        
+                                        <dt class="col-sm-3">العنوان:</dt>
+                                        <dd class="col-sm-9">@Model.Title</dd>
+                                        
+                                        <dt class="col-sm-3">الوصف:</dt>
+                                        <dd class="col-sm-9">@Model.Description</dd>
+                                        
+                                        <dt class="col-sm-3">الحالة:</dt>
+                                        <dd class="col-sm-9">
+                                            @{
+                                                var statusClass = Model.Status switch
+                                                {
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.Open => "bg-success",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.UnderInvestigation => "bg-warning",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.Pending => "bg-info",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.Closed => "bg-secondary",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.TransferredToProsecution => "bg-primary",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.Dismissed => "bg-danger",
+                                                    _ => "bg-secondary"
+                                                };
+                                                var statusText = Model.Status switch
+                                                {
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.Open => "مفتوح",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.UnderInvestigation => "قيد التحقيق",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.Pending => "في الانتظار",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.Closed => "مغلق",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.TransferredToProsecution => "محول للنيابة",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.Dismissed => "مرفوض",
+                                                    _ => Model.Status.ToString()
+                                                };
+                                            }
+                                            <span class="badge @statusClass">@statusText</span>
+                                        </dd>
+                                        
+                                        <dt class="col-sm-3">تاريخ الفتح:</dt>
+                                        <dd class="col-sm-9">@Model.OpenDate.ToString("yyyy/MM/dd")</dd>
+                                        
+                                        <dt class="col-sm-3">تاريخ الإغلاق:</dt>
+                                        <dd class="col-sm-9">
+                                            @(Model.CloseDate?.ToString("yyyy/MM/dd") ?? "لم يتم الإغلاق")
+                                        </dd>
+                                        
+                                        <dt class="col-sm-3">تاريخ الإنشاء:</dt>
+                                        <dd class="col-sm-9">@Model.CreatedAt.ToString("yyyy/MM/dd HH:mm")</dd>
+                                        
+                                        <dt class="col-sm-3">آخر تحديث:</dt>
+                                        <dd class="col-sm-9">
+                                            @(Model.UpdatedAt?.ToString("yyyy/MM/dd HH:mm") ?? "لم يتم التحديث")
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+
+                            <!-- Related Information -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-link me-2"></i>
+                                        المعلومات المرتبطة
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <dl class="row">
+                                        <dt class="col-sm-3">البلاغ المرتبط:</dt>
+                                        <dd class="col-sm-9">
+                                            @if (Model.Report != null)
+                                            {
+                                                <span class="badge bg-info">@Model.Report.ReporterName</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">لا يوجد بلاغ مرتبط</span>
+                                            }
+                                        </dd>
+                                        
+                                        <dt class="col-sm-3">المحقق المسؤول:</dt>
+                                        <dd class="col-sm-9">
+                                            @if (Model.AssignedInvestigator != null)
+                                            {
+                                                <span class="badge bg-primary">@Model.AssignedInvestigator.FullName</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">غير محدد</span>
+                                            }
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <!-- Warning Information -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-danger text-white">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        تحذير مهم
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="alert alert-danger">
+                                        <h6><i class="fas fa-trash me-2"></i>سيتم حذف:</h6>
+                                        <ul class="mb-0">
+                                            <li>جميع تحديثات القضية</li>
+                                            <li>جميع المستندات المرتبطة</li>
+                                            <li>جميع الروابط مع المتهمين</li>
+                                            <li>جميع البيانات المرتبطة</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <form asp-action="Delete" method="post">
+                                        <input type="hidden" asp-for="Id" />
+                                        
+                                        <div class="d-grid gap-2">
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('هل أنت متأكد تماماً من حذف هذه القضية؟ هذا الإجراء لا يمكن التراجع عنه.')">
+                                                <i class="fas fa-trash me-2"></i>
+                                                تأكيد الحذف
+                                            </button>
+                                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-info">
+                                                <i class="fas fa-eye me-2"></i>
+                                                عرض التفاصيل
+                                            </a>
+                                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-warning">
+                                                <i class="fas fa-edit me-2"></i>
+                                                تعديل بدلاً من الحذف
+                                            </a>
+                                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                                <i class="fas fa-arrow-right me-2"></i>
+                                                العودة للقائمة
+                                            </a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Additional confirmation
+            $('form').submit(function(e) {
+                var confirmed = confirm('هل أنت متأكد تماماً من حذف هذه القضية؟\n\nهذا الإجراء سيحذف:\n- جميع تحديثات القضية\n- جميع المستندات المرتبطة\n- جميع الروابط مع المتهمين\n- جميع البيانات المرتبطة\n\nهذا الإجراء لا يمكن التراجع عنه.');
+                
+                if (!confirmed) {
+                    e.preventDefault();
+                    return false;
+                }
+                
+                // Show loading state
+                $('button[type="submit"]').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>جاري الحذف...');
+            });
+
+            // Prevent accidental navigation
+            $(window).on('beforeunload', function() {
+                return 'هل أنت متأكد من الخروج؟ قد تفقد التغييرات.';
+            });
+
+            // Remove warning when submitting form
+            $('form').on('submit', function() {
+                $(window).off('beforeunload');
+            });
+        });
+    </script>
+}

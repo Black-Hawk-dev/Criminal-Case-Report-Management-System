@@ -1,0 +1,393 @@
+@model CriminalCaseManagement.Models.ViewModels.CaseDetailsViewModel
+@{
+    ViewData["Title"] = $"تفاصيل القضية - {Model.CaseNumber}";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Case Header -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="card-title mb-0">
+                                <i class="fas fa-gavel me-2"></i>
+                                @Model.CaseNumber - @Model.Title
+                            </h3>
+                            <small class="text-light">تم الإنشاء في @Model.CreatedAt.ToString("yyyy/MM/dd HH:mm")</small>
+                        </div>
+                        <div class="btn-group">
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-light btn-sm">
+                                <i class="fas fa-edit me-1"></i>
+                                تعديل
+                            </a>
+                            <a asp-action="Index" class="btn btn-light btn-sm">
+                                <i class="fas fa-arrow-right me-1"></i>
+                                العودة
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Main Case Information -->
+                <div class="col-md-8">
+                    <!-- Case Details -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-info-circle me-2"></i>
+                                تفاصيل القضية
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <dl class="row">
+                                        <dt class="col-sm-4">رقم القضية:</dt>
+                                        <dd class="col-sm-8"><strong>@Model.CaseNumber</strong></dd>
+                                        
+                                        <dt class="col-sm-4">العنوان:</dt>
+                                        <dd class="col-sm-8">@Model.Title</dd>
+                                        
+                                        <dt class="col-sm-4">الحالة:</dt>
+                                        <dd class="col-sm-8">
+                                            @{
+                                                var statusClass = Model.Status switch
+                                                {
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.Open => "bg-success",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.UnderInvestigation => "bg-warning",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.Pending => "bg-info",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.Closed => "bg-secondary",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.TransferredToProsecution => "bg-primary",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.Dismissed => "bg-danger",
+                                                    _ => "bg-secondary"
+                                                };
+                                                var statusText = Model.Status switch
+                                                {
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.Open => "مفتوح",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.UnderInvestigation => "قيد التحقيق",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.Pending => "في الانتظار",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.Closed => "مغلق",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.TransferredToProsecution => "محول للنيابة",
+                                                    CriminalCaseManagement.Models.Entities.CaseStatus.Dismissed => "مرفوض",
+                                                    _ => Model.Status.ToString()
+                                                };
+                                            }
+                                            <span class="badge @statusClass">@statusText</span>
+                                        </dd>
+                                        
+                                        <dt class="col-sm-4">تاريخ الفتح:</dt>
+                                        <dd class="col-sm-8">@Model.OpenDate.ToString("yyyy/MM/dd")</dd>
+                                    </dl>
+                                </div>
+                                <div class="col-md-6">
+                                    <dl class="row">
+                                        <dt class="col-sm-4">تاريخ الإغلاق:</dt>
+                                        <dd class="col-sm-8">
+                                            @(Model.CloseDate?.ToString("yyyy/MM/dd") ?? "لم يتم الإغلاق")
+                                        </dd>
+                                        
+                                        <dt class="col-sm-4">البلاغ المرتبط:</dt>
+                                        <dd class="col-sm-8">
+                                            @if (!string.IsNullOrEmpty(Model.ReportTitle))
+                                            {
+                                                <a href="#" class="text-decoration-none">@Model.ReportTitle</a>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">لا يوجد بلاغ مرتبط</span>
+                                            }
+                                        </dd>
+                                        
+                                        <dt class="col-sm-4">المحقق المسؤول:</dt>
+                                        <dd class="col-sm-8">
+                                            @if (!string.IsNullOrEmpty(Model.AssignedInvestigatorName))
+                                            {
+                                                <span class="badge bg-primary">@Model.AssignedInvestigatorName</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">غير محدد</span>
+                                            }
+                                        </dd>
+                                        
+                                        <dt class="col-sm-4">آخر تحديث:</dt>
+                                        <dd class="col-sm-8">
+                                            @(Model.UpdatedAt?.ToString("yyyy/MM/dd HH:mm") ?? "لم يتم التحديث")
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-3">
+                                <h6>الوصف:</h6>
+                                <p class="text-muted">@Model.Description</p>
+                            </div>
+                            
+                            @if (!string.IsNullOrEmpty(Model.Notes))
+                            {
+                                <div class="mt-3">
+                                    <h6>الملاحظات:</h6>
+                                    <p class="text-muted">@Model.Notes</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Case Updates -->
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-history me-2"></i>
+                                تحديثات القضية
+                            </h5>
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addUpdateModal">
+                                <i class="fas fa-plus me-1"></i>
+                                إضافة تحديث
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            @if (Model.Updates.Any())
+                            {
+                                <div class="timeline">
+                                    @foreach (var update in Model.Updates)
+                                    {
+                                        <div class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div>
+                                                        <h6 class="mb-1">@update.UpdateText</h6>
+                                                        <p class="text-muted mb-1">@update.Notes</p>
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-user me-1"></i>
+                                                            @update.UpdatedByFullName
+                                                        </small>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <span class="badge bg-info">@update.Type.ToString()</span>
+                                                        <br />
+                                                        <small class="text-muted">@update.UpdateDate.ToString("yyyy/MM/dd HH:mm")</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center text-muted py-4">
+                                    <i class="fas fa-history fa-2x mb-3"></i>
+                                    <p>لا توجد تحديثات لهذه القضية</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-md-4">
+                    <!-- Statistics -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-chart-bar me-2"></i>
+                                إحصائيات القضية
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <div class="stat-item">
+                                        <div class="stat-number">@Model.Suspects.Count</div>
+                                        <div class="stat-label">متهم</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="stat-item">
+                                        <div class="stat-number">@Model.Documents.Count</div>
+                                        <div class="stat-label">مستند</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="stat-item">
+                                        <div class="stat-number">@Model.Updates.Count</div>
+                                        <div class="stat-label">تحديث</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="stat-item">
+                                        <div class="stat-number">
+                                            @{
+                                                var daysOpen = (DateTime.Now - Model.OpenDate).Days;
+                                            }
+                                            @daysOpen
+                                        </div>
+                                        <div class="stat-label">يوم مفتوح</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Suspects -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-user-times me-2"></i>
+                                المتهمون (@Model.Suspects.Count)
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            @if (Model.Suspects.Any())
+                            {
+                                <div class="list-group list-group-flush">
+                                    @foreach (var suspect in Model.Suspects.Take(5))
+                                    {
+                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">@suspect.FullName</h6>
+                                                <small class="text-muted">@suspect.IdNumber</small>
+                                            </div>
+                                            <span class="badge bg-@(suspect.Status == CriminalCaseManagement.Models.Entities.SuspectStatus.Active ? "success" : "warning")">
+                                                @suspect.Status.ToString()
+                                            </span>
+                                        </div>
+                                    }
+                                </div>
+                                @if (Model.Suspects.Count > 5)
+                                {
+                                    <div class="text-center mt-2">
+                                        <small class="text-muted">و @(Model.Suspects.Count - 5) متهم آخر</small>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-muted text-center">لا يوجد متهمون مرتبطون</p>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Documents -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-file-alt me-2"></i>
+                                المستندات (@Model.Documents.Count)
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            @if (Model.Documents.Any())
+                            {
+                                <div class="list-group list-group-flush">
+                                    @foreach (var doc in Model.Documents.Take(5))
+                                    {
+                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">@doc.FileName</h6>
+                                                <small class="text-muted">@doc.FileSizeFormatted</small>
+                                            </div>
+                                            <span class="badge bg-secondary">@doc.Type.ToString()</span>
+                                        </div>
+                                    }
+                                </div>
+                                @if (Model.Documents.Count > 5)
+                                {
+                                    <div class="text-center mt-2">
+                                        <small class="text-muted">و @(Model.Documents.Count - 5) مستند آخر</small>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-muted text-center">لا توجد مستندات مرتبطة</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Update Modal -->
+<div class="modal fade" id="addUpdateModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus me-2"></i>
+                    إضافة تحديث للقضية
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="AddUpdate" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="CaseId" value="@Model.Id" />
+                    
+                    <div class="mb-3">
+                        <label class="form-label">نص التحديث</label>
+                        <textarea name="UpdateText" class="form-control" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">نوع التحديث</label>
+                        <select name="Type" class="form-select" required>
+                            <option value="StatusChange">تغيير الحالة</option>
+                            <option value="Assignment">تعيين محقق</option>
+                            <option value="Evidence">إضافة دليل</option>
+                            <option value="Interview">مقابلة</option>
+                            <option value="Arrest">اعتقال</option>
+                            <option value="Release">إطلاق سراح</option>
+                            <option value="Transfer">تحويل</option>
+                            <option value="Other">أخرى</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">الحالة الجديدة (اختياري)</label>
+                        <select name="NewStatus" class="form-select">
+                            <option value="">-- لا تغيير --</option>
+                            <option value="Open">مفتوح</option>
+                            <option value="UnderInvestigation">قيد التحقيق</option>
+                            <option value="Pending">في الانتظار</option>
+                            <option value="Closed">مغلق</option>
+                            <option value="TransferredToProsecution">محول للنيابة</option>
+                            <option value="Dismissed">مرفوض</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">ملاحظات إضافية</label>
+                        <textarea name="Notes" class="form-control" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">إضافة التحديث</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Form validation for update modal
+            $('#addUpdateModal form').submit(function() {
+                var updateText = $('textarea[name="UpdateText"]').val();
+                if (!updateText.trim()) {
+                    alert('يرجى إدخال نص التحديث');
+                    return false;
+                }
+                return true;
+            });
+        });
+    </script>
+}

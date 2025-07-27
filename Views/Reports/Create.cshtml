@@ -1,0 +1,158 @@
+@model CriminalCaseManagement.Models.ViewModels.CreateReportViewModel
+
+@{
+    ViewData["Title"] = "إضافة بلاغ جديد";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-plus me-2"></i>إضافة بلاغ جديد</h2>
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-file-alt me-2"></i>معلومات البلاغ</h6>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ReporterName" class="form-label"></label>
+                            <input asp-for="ReporterName" class="form-control" placeholder="أدخل اسم المبلغ" />
+                            <span asp-validation-for="ReporterName" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ReporterIdNumber" class="form-label"></label>
+                            <input asp-for="ReporterIdNumber" class="form-control" placeholder="أدخل رقم الهوية" />
+                            <span asp-validation-for="ReporterIdNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Type" class="form-label"></label>
+                            <select asp-for="Type" class="form-select">
+                                <option value="">اختر نوع البلاغ</option>
+                                <option value="@ReportType.Theft">سرقة</option>
+                                <option value="@ReportType.Assault">اعتداء</option>
+                                <option value="@ReportType.Fraud">احتيال</option>
+                                <option value="@ReportType.DrugRelated">مخدرات</option>
+                                <option value="@ReportType.TrafficViolation">مرور</option>
+                                <option value="@ReportType.Other">أخرى</option>
+                            </select>
+                            <span asp-validation-for="Type" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ReportDate" class="form-label"></label>
+                            <input asp-for="ReportDate" class="form-control" type="date" />
+                            <span asp-validation-for="ReportDate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Location" class="form-label"></label>
+                        <input asp-for="Location" class="form-control" placeholder="أدخل موقع الحادثة (اختياري)" />
+                        <span asp-validation-for="Location" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label"></label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="أدخل تفاصيل البلاغ"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Attachments" class="form-label"></label>
+                        <input asp-for="Attachments" class="form-control" type="file" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif" />
+                        <div class="form-text">يمكنك رفع عدة ملفات (PDF, Word, صور) - الحد الأقصى 10 ميجابايت لكل ملف</div>
+                        <span asp-validation-for="Attachments" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-right me-2"></i>عودة للقائمة
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>حفظ البلاغ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>معلومات مهمة</h6>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h6><i class="fas fa-lightbulb me-2"></i>نصائح لكتابة بلاغ فعال:</h6>
+                    <ul class="mb-0">
+                        <li>اكتب تفاصيل دقيقة ومفصلة</li>
+                        <li>اذكر الأوقات والتواريخ بدقة</li>
+                        <li>صف الأشخاص والأماكن بوضوح</li>
+                        <li>أرفق أي مستندات أو صور متاحة</li>
+                        <li>تأكد من صحة رقم الهوية</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-warning">
+                    <h6><i class="fas fa-exclamation-triangle me-2"></i>ملاحظات:</h6>
+                    <ul class="mb-0">
+                        <li>سيتم تعيين حالة البلاغ كـ "جديد" تلقائياً</li>
+                        <li>يمكن للمحققين تحديث حالة البلاغ لاحقاً</li>
+                        <li>سيتم ربط البلاغ بحسابك تلقائياً</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-success">
+                    <h6><i class="fas fa-shield-alt me-2"></i>الأمان والخصوصية:</h6>
+                    <ul class="mb-0">
+                        <li>جميع البيانات محمية ومشفرة</li>
+                        <li>يتم تسجيل جميع العمليات</li>
+                        <li>فقط المستخدمين المصرح لهم يمكنهم الوصول للبيانات</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // File size validation
+        document.querySelector('input[type="file"]').addEventListener('change', function(e) {
+            const files = e.target.files;
+            const maxSize = 10 * 1024 * 1024; // 10MB
+            
+            for (let i = 0; i < files.length; i++) {
+                if (files[i].size > maxSize) {
+                    alert(`الملف "${files[i].name}" أكبر من 10 ميجابايت. يرجى اختيار ملف أصغر.`);
+                    this.value = '';
+                    return;
+                }
+            }
+        });
+
+        // Auto-fill current date
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateInput = document.querySelector('input[type="date"]');
+            if (dateInput && !dateInput.value) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.value = today;
+            }
+        });
+    </script>
+}

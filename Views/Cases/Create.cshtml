@@ -1,0 +1,245 @@
+@model CriminalCaseManagement.Models.ViewModels.CreateCaseViewModel
+@{
+    ViewData["Title"] = "إنشاء قضية جديدة";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-plus me-2"></i>
+                        إنشاء قضية جديدة
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <!-- Basic Information -->
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            المعلومات الأساسية
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label asp-for="Title" class="form-label"></label>
+                                                <input asp-for="Title" class="form-control" placeholder="عنوان القضية" />
+                                                <span asp-validation-for="Title" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label asp-for="Status" class="form-label"></label>
+                                                <select asp-for="Status" class="form-select">
+                                                    <option value="Open">مفتوح</option>
+                                                    <option value="UnderInvestigation">قيد التحقيق</option>
+                                                    <option value="Pending">في الانتظار</option>
+                                                    <option value="Closed">مغلق</option>
+                                                    <option value="TransferredToProsecution">محول للنيابة</option>
+                                                    <option value="Dismissed">مرفوض</option>
+                                                </select>
+                                                <span asp-validation-for="Status" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label asp-for="OpenDate" class="form-label"></label>
+                                                <input asp-for="OpenDate" type="date" class="form-control" />
+                                                <span asp-validation-for="OpenDate" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label asp-for="CloseDate" class="form-label"></label>
+                                                <input asp-for="CloseDate" type="date" class="form-control" />
+                                                <span asp-validation-for="CloseDate" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-12">
+                                                <label asp-for="Description" class="form-label"></label>
+                                                <textarea asp-for="Description" class="form-control" rows="4" placeholder="وصف تفصيلي للقضية"></textarea>
+                                                <span asp-validation-for="Description" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Related Information -->
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">
+                                            <i class="fas fa-link me-2"></i>
+                                            المعلومات المرتبطة
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label asp-for="ReportId" class="form-label">البلاغ المرتبط</label>
+                                                <select asp-for="ReportId" class="form-select" asp-items="ViewBag.Reports">
+                                                    <option value="">-- اختر البلاغ --</option>
+                                                </select>
+                                                <small class="form-text text-muted">اختر البلاغ المرتبط بهذه القضية (اختياري)</small>
+                                                <span asp-validation-for="ReportId" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label asp-for="AssignedInvestigatorId" class="form-label">المحقق المسؤول</label>
+                                                <select asp-for="AssignedInvestigatorId" class="form-select" asp-items="ViewBag.Investigators">
+                                                    <option value="">-- اختر المحقق --</option>
+                                                </select>
+                                                <small class="form-text text-muted">اختر المحقق المسؤول عن هذه القضية</small>
+                                                <span asp-validation-for="AssignedInvestigatorId" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Notes -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">
+                                            <i class="fas fa-sticky-note me-2"></i>
+                                            ملاحظات إضافية
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label asp-for="Notes" class="form-label"></label>
+                                            <textarea asp-for="Notes" class="form-control" rows="3" placeholder="أي ملاحظات إضافية حول القضية"></textarea>
+                                            <span asp-validation-for="Notes" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <!-- Help Information -->
+                                <div class="card mb-4">
+                                    <div class="card-header bg-info text-white">
+                                        <h5 class="card-title mb-0">
+                                            <i class="fas fa-question-circle me-2"></i>
+                                            معلومات مساعدة
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="alert alert-info">
+                                            <h6><i class="fas fa-lightbulb me-2"></i>نصائح لإنشاء قضية:</h6>
+                                            <ul class="mb-0">
+                                                <li>تأكد من صحة المعلومات المدخلة</li>
+                                                <li>اختر المحقق المناسب للقضية</li>
+                                                <li>اربط القضية بالبلاغ إذا كان متاحاً</li>
+                                                <li>اكتب وصفاً مفصلاً للقضية</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Case Status Guide -->
+                                <div class="card mb-4">
+                                    <div class="card-header bg-warning text-dark">
+                                        <h5 class="card-title mb-0">
+                                            <i class="fas fa-info me-2"></i>
+                                            دليل حالات القضايا
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="small">
+                                            <div class="mb-2">
+                                                <span class="badge bg-success">مفتوح</span>
+                                                <span class="ms-2">قضية جديدة تم فتحها</span>
+                                            </div>
+                                            <div class="mb-2">
+                                                <span class="badge bg-warning">قيد التحقيق</span>
+                                                <span class="ms-2">قيد التحقيق النشط</span>
+                                            </div>
+                                            <div class="mb-2">
+                                                <span class="badge bg-info">في الانتظار</span>
+                                                <span class="ms-2">في انتظار إجراءات</span>
+                                            </div>
+                                            <div class="mb-2">
+                                                <span class="badge bg-secondary">مغلق</span>
+                                                <span class="ms-2">تم إغلاق القضية</span>
+                                            </div>
+                                            <div class="mb-2">
+                                                <span class="badge bg-primary">محول للنيابة</span>
+                                                <span class="ms-2">تم تحويلها للنيابة</span>
+                                            </div>
+                                            <div class="mb-2">
+                                                <span class="badge bg-danger">مرفوض</span>
+                                                <span class="ms-2">تم رفض القضية</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-grid gap-2">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-save me-2"></i>
+                                                حفظ القضية
+                                            </button>
+                                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                                <i class="fas fa-arrow-right me-2"></i>
+                                                العودة للقائمة
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Auto-generate case number preview
+            $('#Title').on('input', function() {
+                var title = $(this).val();
+                if (title.length > 0) {
+                    var preview = 'CASE-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 1000).toString().padStart(4, '0');
+                    // You can show this preview somewhere if needed
+                }
+            });
+
+            // Form validation
+            $('form').submit(function() {
+                var isValid = true;
+                
+                // Check required fields
+                if (!$('#Title').val()) {
+                    $('#Title').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#Title').removeClass('is-invalid');
+                }
+                
+                if (!$('#Description').val()) {
+                    $('#Description').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#Description').removeClass('is-invalid');
+                }
+                
+                if (!$('#OpenDate').val()) {
+                    $('#OpenDate').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#OpenDate').removeClass('is-invalid');
+                }
+                
+                return isValid;
+            });
+
+            // Clear validation on input
+            $('input, textarea, select').on('input change', function() {
+                $(this).removeClass('is-invalid');
+            });
+        });
+    </script>
+}

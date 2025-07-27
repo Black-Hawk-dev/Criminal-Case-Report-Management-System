@@ -1,0 +1,191 @@
+@model CriminalCaseManagement.Models.ViewModels.CreateReportViewModel
+
+@{
+    ViewData["Title"] = "إنشاء بلاغ جديد";
+}
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h2 class="text-primary">
+            <i class="fas fa-plus me-2"></i>
+            إنشاء بلاغ جديد
+        </h2>
+    </div>
+    <div class="col-md-6 text-end">
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-right me-2"></i>
+            العودة للقائمة
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-file-alt me-2"></i>
+                    بيانات البلاغ
+                </h6>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ReporterName" class="form-label"></label>
+                            <input asp-for="ReporterName" class="form-control" placeholder="أدخل اسم المبلغ" />
+                            <span asp-validation-for="ReporterName" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ReporterIdNumber" class="form-label"></label>
+                            <input asp-for="ReporterIdNumber" class="form-control" placeholder="أدخل رقم هوية المبلغ" />
+                            <span asp-validation-for="ReporterIdNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Type" class="form-label"></label>
+                            <select asp-for="Type" class="form-select">
+                                <option value="">اختر نوع البلاغ</option>
+                                <option value="Theft">سرقة</option>
+                                <option value="Assault">اعتداء</option>
+                                <option value="Fraud">احتيال</option>
+                                <option value="DrugTrafficking">تهريب مخدرات</option>
+                                <option value="CyberCrime">جرائم إلكترونية</option>
+                                <option value="DomesticViolence">عنف أسري</option>
+                                <option value="Other">أخرى</option>
+                            </select>
+                            <span asp-validation-for="Type" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ReportDate" class="form-label"></label>
+                            <input asp-for="ReportDate" class="form-control" type="date" />
+                            <span asp-validation-for="ReportDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Location" class="form-label"></label>
+                            <input asp-for="Location" class="form-control" placeholder="أدخل موقع الحادثة" />
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="PhoneNumber" class="form-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="أدخل رقم الهاتف" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label"></label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="أدخل وصف مفصل للبلاغ"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Notes" class="form-label"></label>
+                        <textarea asp-for="Notes" class="form-control" rows="3" placeholder="أدخل أي ملاحظات إضافية"></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Attachments" class="form-label"></label>
+                        <input asp-for="Attachments" class="form-control" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" />
+                        <div class="form-text">يمكنك رفع عدة ملفات (PDF، صور، مستندات)</div>
+                        <span asp-validation-for="Attachments" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>
+                            حفظ البلاغ
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>
+                            إلغاء
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-header">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-info-circle me-2"></i>
+                    معلومات مساعدة
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h6 class="alert-heading">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        نصائح لكتابة بلاغ فعال:
+                    </h6>
+                    <ul class="mb-0">
+                        <li>اكتب وصفاً مفصلاً للحادثة</li>
+                        <li>اذكر جميع التفاصيل المهمة</li>
+                        <li>أرفق أي مستندات أو صور متوفرة</li>
+                        <li>تأكد من صحة بيانات الاتصال</li>
+                    </ul>
+                </div>
+                
+                <div class="alert alert-warning">
+                    <h6 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        ملاحظات مهمة:
+                    </h6>
+                    <ul class="mb-0">
+                        <li>جميع الحقول المطلوبة يجب ملؤها</li>
+                        <li>يمكن رفع ملفات بحجم أقصى 10 ميجابايت</li>
+                        <li>الملفات المدعومة: PDF، JPG، PNG، DOC</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // Set default date to today
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('ReportDate').value = today;
+        });
+        
+        // File upload validation
+        document.querySelector('input[type="file"]').addEventListener('change', function() {
+            const files = this.files;
+            const maxSize = 10 * 1024 * 1024; // 10MB
+            const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                if (file.size > maxSize) {
+                    alert(`الملف ${file.name} أكبر من 10 ميجابايت`);
+                    this.value = '';
+                    return;
+                }
+                
+                if (!allowedTypes.includes(file.type)) {
+                    alert(`نوع الملف ${file.name} غير مدعوم`);
+                    this.value = '';
+                    return;
+                }
+            }
+        });
+    </script>
+}

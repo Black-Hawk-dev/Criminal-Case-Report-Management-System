@@ -1,0 +1,244 @@
+@model CriminalCaseManagement.Models.ViewModels.ReportListViewModel
+
+@{
+    ViewData["Title"] = "البلاغات";
+}
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h2><i class="fas fa-file-alt me-2"></i>البلاغات</h2>
+    </div>
+    <div class="col-md-6 text-end">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>إضافة بلاغ جديد
+        </a>
+    </div>
+</div>
+
+<!-- Search and Filter Form -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h6 class="mb-0"><i class="fas fa-search me-2"></i>البحث والفلترة</h6>
+    </div>
+    <div class="card-body">
+        <form method="get" asp-action="Index">
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">كلمة البحث</label>
+                    <input type="text" class="form-control" name="searchTerm" value="@Model.SearchTerm" placeholder="اسم المبلغ، رقم الهوية، أو الوصف" />
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label class="form-label">نوع البلاغ</label>
+                    <select class="form-select" name="filterType">
+                        <option value="">الكل</option>
+                        <option value="Theft" @(Model.FilterType == ReportType.Theft ? "selected" : "")>سرقة</option>
+                        <option value="Assault" @(Model.FilterType == ReportType.Assault ? "selected" : "")>اعتداء</option>
+                        <option value="Fraud" @(Model.FilterType == ReportType.Fraud ? "selected" : "")>احتيال</option>
+                        <option value="DrugRelated" @(Model.FilterType == ReportType.DrugRelated ? "selected" : "")>مخدرات</option>
+                        <option value="TrafficViolation" @(Model.FilterType == ReportType.TrafficViolation ? "selected" : "")>مرور</option>
+                        <option value="Other" @(Model.FilterType == ReportType.Other ? "selected" : "")>أخرى</option>
+                    </select>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label class="form-label">الحالة</label>
+                    <select class="form-select" name="filterStatus">
+                        <option value="">الكل</option>
+                        <option value="New" @(Model.FilterStatus == ReportStatus.New ? "selected" : "")>جديد</option>
+                        <option value="UnderInvestigation" @(Model.FilterStatus == ReportStatus.UnderInvestigation ? "selected" : "")>قيد التحقيق</option>
+                        <option value="Closed" @(Model.FilterStatus == ReportStatus.Closed ? "selected" : "")>مغلق</option>
+                        <option value="TransferredToProsecution" @(Model.FilterStatus == ReportStatus.TransferredToProsecution ? "selected" : "")>محول للنيابة</option>
+                    </select>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label class="form-label">من تاريخ</label>
+                    <input type="date" class="form-control" name="filterDateFrom" value="@(Model.FilterDateFrom?.ToString("yyyy-MM-dd"))" />
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label class="form-label">إلى تاريخ</label>
+                    <input type="date" class="form-control" name="filterDateTo" value="@(Model.FilterDateTo?.ToString("yyyy-MM-dd"))" />
+                </div>
+                <div class="col-md-1 mb-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Reports Table -->
+<div class="card">
+    <div class="card-header">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h6 class="mb-0">قائمة البلاغات (@Model.TotalCount)</h6>
+            </div>
+            <div class="col-md-6 text-end">
+                <small class="text-muted">عرض @((Model.PageNumber - 1) * Model.PageSize + 1) إلى @Math.Min(Model.PageNumber * Model.PageSize, Model.TotalCount) من @Model.TotalCount</small>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        @if (Model.Reports.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>رقم البلاغ</th>
+                            <th>اسم المبلغ</th>
+                            <th>رقم الهوية</th>
+                            <th>نوع البلاغ</th>
+                            <th>تاريخ البلاغ</th>
+                            <th>الحالة</th>
+                            <th>تم الإنشاء بواسطة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var report in Model.Reports)
+                        {
+                            <tr>
+                                <td>@report.Id</td>
+                                <td>@report.ReporterName</td>
+                                <td>@report.ReporterIdNumber</td>
+                                <td>
+                                    <span class="badge @GetReportTypeBadgeClass(report.Type)">
+                                        @GetReportTypeName(report.Type)
+                                    </span>
+                                </td>
+                                <td>@report.ReportDate.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <span class="badge @GetReportStatusBadgeClass(report.Status)">
+                                        @GetReportStatusName(report.Status)
+                                    </span>
+                                </td>
+                                <td>@report.CreatedByFullName</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Details" asp-route-id="@report.Id" class="btn btn-sm btn-info" title="عرض التفاصيل">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@report.Id" class="btn btn-sm btn-warning" title="تعديل">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@report.Id" class="btn btn-sm btn-danger" title="حذف">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            @if (Model.TotalCount > Model.PageSize)
+            {
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        @{
+                            int totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize);
+                            int startPage = Math.Max(1, Model.PageNumber - 2);
+                            int endPage = Math.Min(totalPages, Model.PageNumber + 2);
+                        }
+
+                        @if (Model.PageNumber > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-searchTerm="@Model.SearchTerm" asp-route-filterType="@Model.FilterType" asp-route-filterStatus="@Model.FilterStatus" asp-route-filterDateFrom="@Model.FilterDateFrom?.ToString("yyyy-MM-dd")" asp-route-filterDateTo="@Model.FilterDateTo?.ToString("yyyy-MM-dd")">
+                                    السابق
+                                </a>
+                            </li>
+                        }
+
+                        @for (int i = startPage; i <= endPage; i++)
+                        {
+                            <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                                <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-searchTerm="@Model.SearchTerm" asp-route-filterType="@Model.FilterType" asp-route-filterStatus="@Model.FilterStatus" asp-route-filterDateFrom="@Model.FilterDateFrom?.ToString("yyyy-MM-dd")" asp-route-filterDateTo="@Model.FilterDateTo?.ToString("yyyy-MM-dd")">
+                                    @i
+                                </a>
+                            </li>
+                        }
+
+                        @if (Model.PageNumber < totalPages)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-searchTerm="@Model.SearchTerm" asp-route-filterType="@Model.FilterType" asp-route-filterStatus="@Model.FilterStatus" asp-route-filterDateFrom="@Model.FilterDateFrom?.ToString("yyyy-MM-dd")" asp-route-filterDateTo="@Model.FilterDateTo?.ToString("yyyy-MM-dd")">
+                                    التالي
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
+        }
+        else
+        {
+            <div class="text-center py-4">
+                <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">لا توجد بلاغات</h5>
+                <p class="text-muted">لم يتم العثور على بلاغات تطابق معايير البحث</p>
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>إضافة بلاغ جديد
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@functions {
+    private string GetReportTypeName(ReportType type)
+    {
+        return type switch
+        {
+            ReportType.Theft => "سرقة",
+            ReportType.Assault => "اعتداء",
+            ReportType.Fraud => "احتيال",
+            ReportType.DrugRelated => "مخدرات",
+            ReportType.TrafficViolation => "مرور",
+            ReportType.Other => "أخرى",
+            _ => type.ToString()
+        };
+    }
+
+    private string GetReportTypeBadgeClass(ReportType type)
+    {
+        return type switch
+        {
+            ReportType.Theft => "bg-danger",
+            ReportType.Assault => "bg-warning",
+            ReportType.Fraud => "bg-info",
+            ReportType.DrugRelated => "bg-dark",
+            ReportType.TrafficViolation => "bg-secondary",
+            ReportType.Other => "bg-light text-dark",
+            _ => "bg-primary"
+        };
+    }
+
+    private string GetReportStatusName(ReportStatus status)
+    {
+        return status switch
+        {
+            ReportStatus.New => "جديد",
+            ReportStatus.UnderInvestigation => "قيد التحقيق",
+            ReportStatus.Closed => "مغلق",
+            ReportStatus.TransferredToProsecution => "محول للنيابة",
+            _ => status.ToString()
+        };
+    }
+
+    private string GetReportStatusBadgeClass(ReportStatus status)
+    {
+        return status switch
+        {
+            ReportStatus.New => "bg-primary",
+            ReportStatus.UnderInvestigation => "bg-warning",
+            ReportStatus.Closed => "bg-success",
+            ReportStatus.TransferredToProsecution => "bg-info",
+            _ => "bg-secondary"
+        };
+    }
+}

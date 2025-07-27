@@ -1,0 +1,244 @@
+@model CriminalCaseManagement.Models.ViewModels.DashboardViewModel
+
+@{
+    ViewData["Title"] = "لوحة التحكم";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="text-primary">
+            <i class="fas fa-tachometer-alt me-2"></i>
+            لوحة التحكم
+        </h2>
+        <hr>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-right-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col me-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            إجمالي البلاغات
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Statistics.TotalReports</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-file-alt fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-right-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col me-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            إجمالي القضايا
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Statistics.TotalCases</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-gavel fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-right-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col me-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            إجمالي المتهمين
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Statistics.TotalSuspects</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user-slash fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-right-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col me-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            إجمالي المحققين
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Statistics.TotalInvestigators</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user-tie fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+    <div class="col-xl-6 col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-chart-pie me-2"></i>
+                    البلاغات حسب النوع
+                </h6>
+            </div>
+            <div class="card-body">
+                <canvas id="reportsByTypeChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6 col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-chart-pie me-2"></i>
+                    القضايا حسب الحالة
+                </h6>
+            </div>
+            <div class="card-body">
+                <canvas id="casesByStatusChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activities and Investigator Workload -->
+<div class="row">
+    <div class="col-xl-8 col-lg-7">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-history me-2"></i>
+                    الأنشطة الأخيرة
+                </h6>
+            </div>
+            <div class="card-body">
+                @if (Model.RecentActivities.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var activity in Model.RecentActivities)
+                        {
+                            <div class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">@activity.Title</div>
+                                    <small class="text-muted">@activity.Description</small>
+                                    <br>
+                                    <small class="text-muted">
+                                        <i class="fas fa-user me-1"></i>
+                                        @activity.UserName
+                                    </small>
+                                </div>
+                                <small class="text-muted">@activity.Date.ToString("dd/MM/yyyy HH:mm")</small>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted text-center">لا توجد أنشطة حديثة</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-users me-2"></i>
+                    عبء العمل على المحققين
+                </h6>
+            </div>
+            <div class="card-body">
+                @if (Model.InvestigatorWorkload.Any())
+                {
+                    @foreach (var workload in Model.InvestigatorWorkload)
+                    {
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span class="fw-bold">@workload.InvestigatorName</span>
+                                <span class="badge bg-primary">@workload.AssignedCases قضايا</span>
+                            </div>
+                            <div class="progress mt-2" style="height: 8px;">
+                                <div class="progress-bar bg-success" style="width: @workload.CompletionRate%"></div>
+                            </div>
+                            <small class="text-muted">
+                                مفتوح: @workload.OpenCases | مغلق: @workload.ClosedCases
+                            </small>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted text-center">لا توجد بيانات</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Reports by Type Chart
+        const reportsByTypeCtx = document.getElementById('reportsByTypeChart').getContext('2d');
+        new Chart(reportsByTypeCtx, {
+            type: 'doughnut',
+            data: {
+                labels: @Json.Serialize(Model.ChartData.ReportsByType.Select(x => x.Label)),
+                datasets: [{
+                    data: @Json.Serialize(Model.ChartData.ReportsByType.Select(x => x.Value)),
+                    backgroundColor: @Json.Serialize(Model.ChartData.ReportsByType.Select(x => x.Color)),
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Cases by Status Chart
+        const casesByStatusCtx = document.getElementById('casesByStatusChart').getContext('2d');
+        new Chart(casesByStatusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: @Json.Serialize(Model.ChartData.CasesByStatus.Select(x => x.Label)),
+                datasets: [{
+                    data: @Json.Serialize(Model.ChartData.CasesByStatus.Select(x => x.Value)),
+                    backgroundColor: @Json.Serialize(Model.ChartData.CasesByStatus.Select(x => x.Color)),
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+}
