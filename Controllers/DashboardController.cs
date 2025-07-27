@@ -1,4 +1,3 @@
-
 namespace CriminalCaseManagement.Controllers
 {
     [Authorize]
