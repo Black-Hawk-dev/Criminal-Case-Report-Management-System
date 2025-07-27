@@ -1,6 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using CriminalCaseManagement.Models.Entities;
-
 namespace CriminalCaseManagement.Models.ViewModels
 {
     public class SuspectViewModel
