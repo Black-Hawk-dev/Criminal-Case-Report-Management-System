@@ -1,0 +1,249 @@
+@model CriminalCaseManagement.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "لوحة التحكم";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="mb-3">
+            <i class="fas fa-tachometer-alt me-2"></i>
+            لوحة التحكم
+        </h2>
+        <p class="text-muted">مرحباً @Context.Session.GetString("UserName")، هذه نظرة عامة على النظام</p>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card bg-primary text-white h-100">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">إجمالي البلاغات</div>
+                        <div class="h5 mb-0 font-weight-bold">@Model.TotalReports</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-file-alt fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "Reports")" class="text-white text-decoration-none">
+                    <small>عرض جميع البلاغات <i class="fas fa-arrow-left"></i></small>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card bg-success text-white h-100">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">إجمالي القضايا</div>
+                        <div class="h5 mb-0 font-weight-bold">@Model.TotalCases</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-folder-open fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "Cases")" class="text-white text-decoration-none">
+                    <small>عرض جميع القضايا <i class="fas fa-arrow-left"></i></small>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card bg-warning text-white h-100">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">إجمالي المتهمين</div>
+                        <div class="h5 mb-0 font-weight-bold">@Model.TotalSuspects</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-users fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "Suspects")" class="text-white text-decoration-none">
+                    <small>عرض جميع المتهمين <i class="fas fa-arrow-left"></i></small>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card bg-info text-white h-100">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">المحققين</div>
+                        <div class="h5 mb-0 font-weight-bold">@Model.TotalInvestigators</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user-tie fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                @if (Context.Session.GetString("UserRole") == "SystemAdmin")
+                {
+                    <a href="@Url.Action("Index", "Users")" class="text-white text-decoration-none">
+                        <small>إدارة المستخدمين <i class="fas fa-arrow-left"></i></small>
+                    </a>
+                }
+                else
+                {
+                    <small class="text-white-50">المحققين النشطين</small>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Case Status Overview -->
+<div class="row mb-4">
+    <div class="col-xl-8 col-lg-7">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-chart-pie me-2"></i>
+                    حالة القضايا
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <div class="mb-3">
+                            <div class="h4 text-warning">@Model.UnderInvestigationCases</div>
+                            <div class="text-muted">قيد التحقيق</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="mb-3">
+                            <div class="h4 text-success">@Model.ClosedCases</div>
+                            <div class="text-muted">مغلقة</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="mb-3">
+                            <div class="h4 text-info">@Model.TransferredToProsecutionCases</div>
+                            <div class="text-muted">محولة للنيابة</div>
+                        </div>
+                    </div>
+                </div>
+                
+                @if (Model.CasesByType.Any())
+                {
+                    <hr>
+                    <h6 class="font-weight-bold text-secondary mb-3">القضايا حسب النوع</h6>
+                    <div class="row">
+                        @foreach (var caseType in Model.CasesByType)
+                        {
+                            <div class="col-md-6 mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>@caseType.Type</span>
+                                    <span class="badge bg-primary">@caseType.Count</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4 col-lg-5">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-clock me-2"></i>
+                    النشاطات الأخيرة
+                </h6>
+            </div>
+            <div class="card-body">
+                @if (Model.RecentActivities.Any())
+                {
+                    @foreach (var activity in Model.RecentActivities)
+                    {
+                        <div class="d-flex mb-3">
+                            <div class="me-3">
+                                @if (activity.Type == "Report")
+                                {
+                                    <i class="fas fa-file-alt text-primary"></i>
+                                }
+                                else if (activity.Type == "Case")
+                                {
+                                    <i class="fas fa-folder-open text-success"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-user text-warning"></i>
+                                }
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="small">@activity.Activity</div>
+                                <div class="text-muted small">@activity.Date.ToString("dd/MM/yyyy HH:mm")</div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-inbox fa-3x mb-3"></i>
+                        <p>لا توجد نشاطات حديثة</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-bolt me-2"></i>
+                    إجراءات سريعة
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="@Url.Action("Create", "Reports")" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-plus-circle me-2"></i>
+                            إضافة بلاغ جديد
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="@Url.Action("Create", "Cases")" class="btn btn-outline-success w-100">
+                            <i class="fas fa-folder-plus me-2"></i>
+                            إنشاء قضية جديدة
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="@Url.Action("Create", "Suspects")" class="btn btn-outline-warning w-100">
+                            <i class="fas fa-user-plus me-2"></i>
+                            إضافة متهم جديد
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="@Url.Action("Index", "Reports")" class="btn btn-outline-info w-100">
+                            <i class="fas fa-search me-2"></i>
+                            البحث في النظام
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

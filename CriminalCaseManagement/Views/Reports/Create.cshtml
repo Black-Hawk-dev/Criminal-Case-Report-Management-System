@@ -1,0 +1,153 @@
+@model CriminalCaseManagement.Models.Report
+@{
+    ViewData["Title"] = "إضافة بلاغ جديد";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>
+                <i class="fas fa-plus-circle me-2"></i>
+                إضافة بلاغ جديد
+            </h2>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-right me-2"></i>
+                العودة للقائمة
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h6 class="m-0">
+            <i class="fas fa-file-alt me-2"></i>
+            بيانات البلاغ
+        </h6>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ReporterName" class="form-label">
+                        <i class="fas fa-user me-1"></i>
+                        اسم المبلغ *
+                    </label>
+                    <input asp-for="ReporterName" class="form-control" placeholder="أدخل اسم المبلغ كاملاً" />
+                    <span asp-validation-for="ReporterName" class="text-danger"></span>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ReporterIdNumber" class="form-label">
+                        <i class="fas fa-id-card me-1"></i>
+                        رقم الهوية *
+                    </label>
+                    <input asp-for="ReporterIdNumber" class="form-control" placeholder="أدخل رقم الهوية" />
+                    <span asp-validation-for="ReporterIdNumber" class="text-danger"></span>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Type" class="form-label">
+                        <i class="fas fa-tags me-1"></i>
+                        نوع البلاغ *
+                    </label>
+                    <select asp-for="Type" class="form-select">
+                        <option value="">اختر نوع البلاغ</option>
+                        <option value="1">سرقة</option>
+                        <option value="2">اعتداء</option>
+                        <option value="3">احتيال</option>
+                        <option value="4">قتل</option>
+                        <option value="5">سطو</option>
+                        <option value="6">أخرى</option>
+                    </select>
+                    <span asp-validation-for="Type" class="text-danger"></span>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Location" class="form-label">
+                        <i class="fas fa-map-marker-alt me-1"></i>
+                        المكان
+                    </label>
+                    <input asp-for="Location" class="form-control" placeholder="أدخل مكان وقوع الحادث" />
+                    <span asp-validation-for="Location" class="text-danger"></span>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">
+                    <i class="fas fa-align-left me-1"></i>
+                    وصف البلاغ *
+                </label>
+                <textarea asp-for="Description" class="form-control" rows="5" 
+                          placeholder="اكتب وصفاً مفصلاً للحادث المبلغ عنه..."></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+                <div class="form-text">
+                    <i class="fas fa-info-circle me-1"></i>
+                    يرجى كتابة وصف مفصل ودقيق للحادث المبلغ عنه
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-12">
+                    <div class="bg-light p-3 rounded mb-3">
+                        <h6 class="text-muted mb-2">
+                            <i class="fas fa-exclamation-triangle me-1"></i>
+                            ملاحظات مهمة:
+                        </h6>
+                        <ul class="mb-0 text-muted small">
+                            <li>تأكد من صحة جميع البيانات المدخلة</li>
+                            <li>الحقول المميزة بـ (*) مطلوبة</li>
+                            <li>سيتم حفظ تاريخ ووقت إنشاء البلاغ تلقائياً</li>
+                            <li>يمكن إضافة مرفقات لاحقاً من صفحة تفاصيل البلاغ</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-end">
+                <a asp-action="Index" class="btn btn-outline-secondary me-2">
+                    <i class="fas fa-times me-1"></i>
+                    إلغاء
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i>
+                    حفظ البلاغ
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // Auto-focus on first input
+        $(document).ready(function() {
+            $('#ReporterName').focus();
+        });
+        
+        // Character counter for description
+        $('#Description').on('input', function() {
+            var length = $(this).val().length;
+            var maxLength = 1000;
+            var remaining = maxLength - length;
+            
+            if (!$('#char-counter').length) {
+                $(this).after('<div id="char-counter" class="form-text"></div>');
+            }
+            
+            $('#char-counter').text('المتبقي: ' + remaining + ' حرف');
+            
+            if (remaining < 50) {
+                $('#char-counter').addClass('text-warning');
+            } else {
+                $('#char-counter').removeClass('text-warning');
+            }
+        });
+    </script>
+}
