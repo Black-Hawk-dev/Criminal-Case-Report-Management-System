@@ -1,6 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using CriminalCaseManagement.Models;
-
 namespace CriminalCaseManagement.Data
 {
     public class ApplicationDbContext : DbContext
