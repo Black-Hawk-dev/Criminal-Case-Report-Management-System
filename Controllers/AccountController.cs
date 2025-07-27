@@ -1,8 +1,3 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using CriminalCaseManagement.Models.Entities;
-using CriminalCaseManagement.Models.ViewModels;
-
 namespace CriminalCaseManagement.Controllers
 {
     public class AccountController : Controller
