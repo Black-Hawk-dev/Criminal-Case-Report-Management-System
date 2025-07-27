@@ -1,10 +1,3 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using CriminalCaseManagement.Models;
-using CriminalCaseManagement.Data;
-using CriminalCaseManagement.ViewModels;
-
 namespace CriminalCaseManagement.Controllers;
 
 public class HomeController : Controller
