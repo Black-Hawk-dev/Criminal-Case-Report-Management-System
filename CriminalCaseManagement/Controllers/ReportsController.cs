@@ -1,3 +1,4 @@
+
 namespace CriminalCaseManagement.Controllers
 {
     public class ReportsController : Controller
