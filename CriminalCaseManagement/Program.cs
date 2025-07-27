@@ -1,7 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using CriminalCaseManagement.Data;
-using CriminalCaseManagement.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
