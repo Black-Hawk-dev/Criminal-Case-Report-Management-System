@@ -1,7 +1,3 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using CriminalCaseManagement.Models;
-
 namespace CriminalCaseManagement.Controllers;
 
 public class HomeController : Controller
