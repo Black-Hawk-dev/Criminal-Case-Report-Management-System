@@ -1,11 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using CriminalCaseManagement.Data;
-using CriminalCaseManagement.Models.Entities;
-using CriminalCaseManagement.Models.ViewModels;
-
 namespace CriminalCaseManagement.Controllers
 {
     [Authorize]
