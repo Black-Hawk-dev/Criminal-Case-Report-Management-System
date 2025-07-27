@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace CriminalCaseManagement.ViewModels
 {
     public class ReportViewModel
