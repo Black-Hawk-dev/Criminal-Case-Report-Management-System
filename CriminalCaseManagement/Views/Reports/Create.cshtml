@@ -1,0 +1,114 @@
+@model CriminalCaseManagement.Models.Report
+@{
+    ViewData["Title"] = "بلاغ جديد";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+        <i class="fas fa-plus me-2"></i>
+        بلاغ جديد
+    </h1>
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="fas fa-arrow-right me-2"></i>
+        العودة للقائمة
+    </a>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">معلومات البلاغ</h6>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="ReporterName" class="control-label">
+                            <i class="fas fa-user me-1"></i>
+                            اسم المبلغ
+                        </label>
+                        <input asp-for="ReporterName" class="form-control" placeholder="أدخل اسم المبلغ" />
+                        <span asp-validation-for="ReporterName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="ReporterIdNumber" class="control-label">
+                            <i class="fas fa-id-card me-1"></i>
+                            رقم الهوية
+                        </label>
+                        <input asp-for="ReporterIdNumber" class="form-control" placeholder="أدخل رقم الهوية" />
+                        <span asp-validation-for="ReporterIdNumber" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="ReportType" class="control-label">
+                            <i class="fas fa-tag me-1"></i>
+                            نوع البلاغ
+                        </label>
+                        <select asp-for="ReportType" class="form-control">
+                            <option value="">اختر نوع البلاغ</option>
+                            <option value="سرقة">سرقة</option>
+                            <option value="اعتداء">اعتداء</option>
+                            <option value="احتيال">احتيال</option>
+                            <option value="تهديد">تهديد</option>
+                            <option value="إتلاف ممتلكات">إتلاف ممتلكات</option>
+                            <option value="مخدرات">مخدرات</option>
+                            <option value="أخرى">أخرى</option>
+                        </select>
+                        <span asp-validation-for="ReportType" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="ReportDate" class="control-label">
+                            <i class="fas fa-calendar me-1"></i>
+                            تاريخ البلاغ
+                        </label>
+                        <input asp-for="ReportDate" class="form-control" type="date" />
+                        <span asp-validation-for="ReportDate" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Location" class="control-label">
+                    <i class="fas fa-map-marker-alt me-1"></i>
+                    الموقع
+                </label>
+                <input asp-for="Location" class="form-control" placeholder="أدخل موقع الحادثة" />
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Description" class="control-label">
+                    <i class="fas fa-align-left me-1"></i>
+                    وصف البلاغ
+                </label>
+                <textarea asp-for="Description" class="form-control" rows="4" placeholder="أدخل تفاصيل البلاغ"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-2"></i>
+                    حفظ البلاغ
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-times me-2"></i>
+                    إلغاء
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

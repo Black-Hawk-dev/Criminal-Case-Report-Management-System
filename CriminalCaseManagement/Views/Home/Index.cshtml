@@ -1,0 +1,309 @@
+@model CriminalCaseManagement.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "لوحة التحكم";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-tachometer-alt me-2"></i>
+            لوحة التحكم
+        </h1>
+        <p class="text-muted">مرحباً بك في نظام إدارة التحقيقات والبلاغات الجنائية</p>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-right-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col me-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            إجمالي البلاغات
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalReports</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-file-alt fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-right-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col me-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            إجمالي القضايا
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalCases</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-folder-open fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-right-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col me-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            إجمالي المتهمين
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalSuspects</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user-times fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-right-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col me-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            إجمالي المحققين
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalInvestigators</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user-shield fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional Statistics -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col me-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            البلاغات المعلقة
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.PendingReports</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-clock fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col me-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            القضايا المفتوحة
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.OpenCases</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-folder fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col me-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            القضايا المغلقة
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ClosedCases</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Content Row -->
+<div class="row">
+    <!-- Recent Reports -->
+    <div class="col-xl-6 col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-file-alt me-2"></i>
+                    آخر البلاغات
+                </h6>
+                <a asp-controller="Reports" asp-action="Index" class="btn btn-sm btn-primary">
+                    عرض الكل
+                </a>
+            </div>
+            <div class="card-body">
+                @if (Model.RecentReports.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>المبلغ</th>
+                                    <th>النوع</th>
+                                    <th>التاريخ</th>
+                                    <th>الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var report in Model.RecentReports)
+                                {
+                                    <tr>
+                                        <td>@report.ReporterName</td>
+                                        <td>@report.ReportType</td>
+                                        <td>@report.ReportDate.ToString("dd/MM/yyyy")</td>
+                                        <td>
+                                            <span class="badge @(report.Status == "Pending" ? "bg-warning" : 
+                                                              report.Status == "UnderInvestigation" ? "bg-info" : 
+                                                              report.Status == "Closed" ? "bg-success" : "bg-secondary")">
+                                                @report.Status
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted text-center">لا توجد بلاغات حديثة</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Cases -->
+    <div class="col-xl-6 col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-success">
+                    <i class="fas fa-folder-open me-2"></i>
+                    آخر القضايا
+                </h6>
+                <a asp-controller="Cases" asp-action="Index" class="btn btn-sm btn-success">
+                    عرض الكل
+                </a>
+            </div>
+            <div class="card-body">
+                @if (Model.RecentCases.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>رقم القضية</th>
+                                    <th>المحقق</th>
+                                    <th>التاريخ</th>
+                                    <th>الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var caseItem in Model.RecentCases)
+                                {
+                                    <tr>
+                                        <td>@caseItem.CaseNumber</td>
+                                        <td>@caseItem.InvestigatorName</td>
+                                        <td>@caseItem.CreatedAt.ToString("dd/MM/yyyy")</td>
+                                        <td>
+                                            <span class="badge @(caseItem.Status == "Open" ? "bg-primary" : 
+                                                              caseItem.Status == "UnderInvestigation" ? "bg-info" : 
+                                                              caseItem.Status == "Closed" ? "bg-success" : "bg-secondary")">
+                                                @caseItem.Status
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted text-center">لا توجد قضايا حديثة</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Case Status Chart -->
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-chart-pie me-2"></i>
+                    إحصائيات حالة القضايا
+                </h6>
+            </div>
+            <div class="card-body">
+                @if (Model.CaseStatusChart.Any())
+                {
+                    <div class="row">
+                        @foreach (var status in Model.CaseStatusChart)
+                        {
+                            <div class="col-md-3 mb-3">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col me-2">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    @status.Status
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">@status.Count</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-chart-pie fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted text-center">لا توجد بيانات للإحصائيات</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+    </script>
+}

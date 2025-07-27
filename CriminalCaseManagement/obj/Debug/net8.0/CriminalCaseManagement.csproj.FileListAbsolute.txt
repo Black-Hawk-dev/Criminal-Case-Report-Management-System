@@ -1,0 +1,9 @@
+/workspace/CriminalCaseManagement/obj/Debug/net8.0/CriminalCaseManagement.csproj.AssemblyReference.cache
+/workspace/CriminalCaseManagement/obj/Debug/net8.0/CriminalCaseManagement.GeneratedMSBuildEditorConfig.editorconfig
+/workspace/CriminalCaseManagement/obj/Debug/net8.0/CriminalCaseManagement.AssemblyInfoInputs.cache
+/workspace/CriminalCaseManagement/obj/Debug/net8.0/CriminalCaseManagement.AssemblyInfo.cs
+/workspace/CriminalCaseManagement/obj/Debug/net8.0/CriminalCaseManagement.csproj.CoreCompileInputs.cache
+/workspace/CriminalCaseManagement/obj/Debug/net8.0/CriminalCaseManagement.MvcApplicationPartsAssemblyInfo.cache
+/workspace/CriminalCaseManagement/obj/Debug/net8.0/CriminalCaseManagement.RazorAssemblyInfo.cache
+/workspace/CriminalCaseManagement/obj/Debug/net8.0/CriminalCaseManagement.RazorAssemblyInfo.cs
+/workspace/CriminalCaseManagement/obj/Debug/net8.0/CriminalCaseManagement.sourcelink.json
