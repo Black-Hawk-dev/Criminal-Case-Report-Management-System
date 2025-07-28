@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using CriminalCaseManagement.Models.Entities;
 
 namespace CriminalCaseManagement.Data
 {
